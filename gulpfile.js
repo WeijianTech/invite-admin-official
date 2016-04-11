@@ -8,6 +8,7 @@ var lazypipe = require('lazypipe');
 var rimraf = require('rimraf');
 var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
+var ghPages = require('gulp-gh-pages');
 
 var yeoman = {
   app: require('./bower.json').appPath || 'app',
@@ -201,4 +202,11 @@ gulp.task('build', ['clean:dist'], function () {
   runSequence(['images', 'copy:extras', 'copy:fonts', 'client:build']);
 });
 
-gulp.task('default', ['build']);
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+      .pipe(ghPages());
+});
+
+gulp.task('default', function() {
+  runSequence(['build', 'deploy']);
+});
